@@ -1,79 +1,255 @@
 <!DOCTYPE html>
+
 <html>
+	<head>
+			
+			<title>Bird au Flapper</title>
+		
+	</head>
+	<body>
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Monkeyporridge : The most awesome app that might do something maybe at some point" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Monkeyporridge</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/PlainSight/monkeyporridge">View on GitHub</a>
-
-          <h1 id="project_title">Monkeyporridge</h1>
-          <h2 id="project_tagline">The most awesome app that might do something maybe at some point</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/PlainSight/monkeyporridge/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/PlainSight/monkeyporridge/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Monkeyporridge maintained by <a href="https://github.com/PlainSight">PlainSight</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
+		<canvas id="canvas" style="width=800; height=600; border: 1px solid red;" ><p> NO HTML5 BADDY </p></canvas>
+		
+		
+		<script type="text/javascript">
+			
+			var ImageMap = [];
+			var ctx;
+			var canvas;
+			var eventQueue = [];
+			
+			window.onload = function (e) {
+			
+				canvas = document.getElementById("canvas");
+				ctx = canvas.getContext("2d");
+				
+				canvas.addEventListener("mousedown", mouseDown, false);
+				
+				// dummy canvas
+				canvas.width = 800;
+				canvas.height = 600;
+				
+				loadImages();
+				
+				
+				var timer = setInterval(function () {
+					if(imagesReady()) {
+						
+						clearInterval(timer);
+						
+						gameLoop(); 
+					}
+				
+				}, 50);
+				
+			}
+						
+			
+			function gameLoop() {
+				
+				var x = 200;
+				var y = 100;
+				
+				var dy = 1;
+				
+				var points = 0;
+				
+				var flapdown = 0;
+				
+				var obstacles = [];
+				
+				var tick = 0;
+				
+				var loop = setInterval(function() {
+					tick++;
+					
+					if(tick % 100 == 0) {
+					
+						var obstacle = {
+							x: canvas.width,
+							height: (Math.random()*(canvas.height - 200)) + 100,
+							gap: 100 + ((100 - tick/600) <  0 ? 0 : (100 - tick/600))
+						};
+						
+						obstacles.push(obstacle);
+					}
+					
+					if(tick > 300 && (tick - 30) % 100 == 0) {
+						points++;
+					}
+					
+					for(var ob in obstacles) {
+						var tempob = obstacles[ob];
+						
+						tempob.x -= 3;
+					}
+					
+					console.log
+					
+					for(var rm = 0; rm < obstacles.length; rm++) {
+						if(obstacles[rm] != undefined && obstacles[rm].x < -200) {
+							delete obstacles[rm];
+						}
+					}
+					
+					
+					//render
+					clearScreen();
+					
+					if(flapdown != 0) {
+						drawImage('birdy', x, y, 1);
+					} else {
+						drawImage('birdy', x, y, 0);
+					}
+					for(var ob in obstacles) {
+						var pipe = obstacles[ob];
+						drawPipe(pipe);
+					}
+					drawScore(points);
+					
+					
+					//input
+					var input = readUserInput();
+					
+					if(input == 'click') {
+					
+						dy = -55;
+						flapdown = 8;
+					}
+					//flapdown animation
+					if(flapdown != 0) {
+						flapdown--;
+					}
+					
+					//physics
+					y += dy/10;
+					dy += 3;
+					
+					if(y < 0) {
+						//hit sky
+						//alert("YOU HIT THE SKY");
+						clearInterval(loop);
+						gameLoop(); ;
+					}
+					if(y > canvas.height) {
+						//hit ground
+						//alert("CRASH LANDING!");
+						clearInterval(loop);
+						gameLoop(); ;
+					}
+					
+					for(var ob in obstacles) {
+					
+						var tempob = obstacles[ob];
+						
+						if(x+67 >= tempob.x && x < tempob.x + 100) {
+							if((y < tempob.height - tempob.gap/2) || (y+50 > tempob.height + tempob.gap/2)) {
+								//alert("YOU CRASHED");
+								console.log(tick);
+								clearInterval(loop);
+								gameLoop(); ;
+							}
+						}					
+					}
+					
+				}, 16);
+			
+			}
+			
+			function readUserInput() {
+				return eventQueue.pop();
+			}
+			
+			function mouseDown() {
+				handleUserEvent('click');
+			}
+			
+			function handleUserEvent(event) {
+				
+				if(event == 'click') {
+					eventQueue.push('click');
+				}
+			}
+			
+			function imagesReady() {
+				
+				var allLoaded = true;
+				
+				for(var key in ImageMap) {
+					allLoaded = allLoaded && ImageMap[key].inited;
+				}
+				
+				return allLoaded;
+			}
+			
+			function loadImages() {
+				
+				var images = ['birdy.png', 'pipe.png', 'piped.png'];//, 'background.png', 'pipe.png'];
+				
+				for(var i = 0; i < images.length; i++) {
+					var idx = images[i].indexOf('.');
+					var imagename = images[i].substring(0, idx);
+				
+					ImageMap[imagename] = loadImage(images[i]);
+				}
+				
+			}
+			
+			function loadImage(name) {
+				var image = new Image();
+				
+				image.src = name;
+				
+				image.inited = false;
+				
+				image.onload = function () {
+				
+					image.inited = true;
+				}
+								
+				return image;		
+			}
+			
+			function drawScore(score) {
+			
+				ctx.fillStyle = "orange";
+				ctx.font = "bold 25px Arial";
+				ctx.fillText(score, canvas.width - 50, 20);
+			}
+			
+			function drawPipe(pipe) {
+			
+				var pipeup = ImageMap['pipe'];
+				var pipedown = ImageMap['piped'];
+				
+				
+				ctx.drawImage(pipeup, pipe.x, pipe.height + pipe.gap/2);
+					
+				ctx.drawImage(pipedown, pipe.x, pipe.height - pipe.gap/2 - pipedown.height);
+			}
+			
+			function drawImage(name, xpos, ypos, frame) {
+				
+				var img = ImageMap[name];
+				
+				
+				var imw = 67;
+				var imh = 50;
+				
+				if(frame != null) {
+				
+					ctx.drawImage(img, imw*frame, 0, imw, imh, xpos, ypos, imw, imh);
+				
+				} else {
+					ctx.drawImage(img, xpos, ypos);
+				}
+			}
+			
+			function clearScreen() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+			}
+			
+		</script>
+		
+	</body>
 </html>
