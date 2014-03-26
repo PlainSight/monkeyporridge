@@ -10,6 +10,7 @@
 
 		<canvas id="canvas" style="width=800; height=600; border: 1px solid red;" ><p> NO HTML5 BADDY </p></canvas>
 		
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
 		
 		<script type="text/javascript">
 			
@@ -17,9 +18,11 @@
 			var ctx;
 			var canvas;
 			var eventQueue = [];
+			var name = "";
+			var score = 0;
 			
 			window.onload = function (e) {
-			
+								
 				canvas = document.getElementById("canvas");
 				ctx = canvas.getContext("2d");
 				
@@ -37,9 +40,33 @@
 						
 						clearInterval(timer);
 						
+						name = window.prompt("Input name","joe blogs");
+						
 						gameLoop(); 
 					}
 				
+				}, 50);
+				
+			}
+			
+			function pause() {
+				
+				clearScreen();
+				
+				postScore();
+								
+				var score = 0;
+				
+				//drawHighScores();
+				
+				var pausetimer = setInterval(function () {
+					
+					if(readUserInput() != undefined) {
+					
+						clearInterval(pausetimer);
+						
+						gameLoop();
+					}
 				}, 50);
 				
 			}
@@ -128,14 +155,16 @@
 					if(y < 0) {
 						//hit sky
 						//alert("YOU HIT THE SKY");
+						score = points;
 						clearInterval(loop);
-						gameLoop(); ;
+						pause(); ;
 					}
 					if(y > canvas.height) {
 						//hit ground
 						//alert("CRASH LANDING!");
+						score = points;
 						clearInterval(loop);
-						gameLoop(); ;
+						pause(); ;
 					}
 					
 					for(var ob in obstacles) {
@@ -145,14 +174,84 @@
 						if(x+67 >= tempob.x && x < tempob.x + 100) {
 							if((y < tempob.height - tempob.gap/2) || (y+50 > tempob.height + tempob.gap/2)) {
 								//alert("YOU CRASHED");
-								console.log(tick);
+								score = points;
 								clearInterval(loop);
-								gameLoop(); ;
+								pause(); ;
 							}
 						}					
 					}
 					
 				}, 16);
+			
+			}
+			
+			function postScore() {
+			
+				console.log(name + ' ' + score);
+			
+				$.ajax({
+					type: "POST",
+					url: "http://plainsight.co.nz:8888/addscore", 
+					async: true,
+					data: { name: name, score: score },
+					success: function(data) {
+						
+						data = JSON.parse(data);
+					
+						var ydis = 100;
+						for(var it = 0; it < data.length; it++) {
+						
+							var score = data[it];
+						
+							ctx.fillStyle = "black";
+							ctx.font = "bold 25px Arial";
+							ctx.fillText(score.name + ' ' + score.score, canvas.width/2, ydis);
+							
+							ydis += 30;
+							
+							if(ydis > canvas.height) {
+								break;
+							}
+						}
+					
+					
+					
+					}
+				});
+			
+			
+			}
+			
+			function drawHighScores() {
+							
+				$.ajax({
+					type: "GET",
+					url: "http://plainsight.co.nz:8888", 
+					async: true,
+					success: function(data) {
+						
+						data = JSON.parse(data);
+					
+						var ydis = 100;
+						for(var it = 0; it < data.length; it++) {
+						
+							var score = data[it];
+						
+							ctx.fillStyle = "black";
+							ctx.font = "bold 25px Arial";
+							ctx.fillText(score.name + ' ' + score.score, canvas.width/2, ydis);
+							
+							ydis += 30;
+							
+							if(ydis > canvas.height) {
+								break;
+							}
+						}
+					
+					
+					
+					}
+				});
 			
 			}
 			
