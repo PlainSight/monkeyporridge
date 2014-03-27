@@ -122,15 +122,15 @@
 					
 					//render
 					clearScreen();
-					
+
+					for(var ob in obstacles) {
+						var pipe = obstacles[ob];
+						drawPipe(pipe);
+					}
 					if(flapdown != 0) {
 						drawImage('birdy', x, y, 1);
 					} else {
 						drawImage('birdy', x, y, 0);
-					}
-					for(var ob in obstacles) {
-						var pipe = obstacles[ob];
-						drawPipe(pipe);
 					}
 					drawScore(points);
 					
@@ -140,7 +140,7 @@
 					
 					if(input == 'click') {
 					
-						dy = -55;
+						dy = -60;
 						flapdown = 8;
 					}
 					//flapdown animation
@@ -152,13 +152,6 @@
 					y += dy/10;
 					dy += 3;
 					
-					if(y < 0) {
-						//hit sky
-						//alert("YOU HIT THE SKY");
-						score = points;
-						clearInterval(loop);
-						pause(); ;
-					}
 					if(y > canvas.height) {
 						//hit ground
 						//alert("CRASH LANDING!");
@@ -171,8 +164,8 @@
 					
 						var tempob = obstacles[ob];
 						
-						if(x+67 >= tempob.x && x < tempob.x + 100) {
-							if((y < tempob.height - tempob.gap/2) || (y+50 > tempob.height + tempob.gap/2)) {
+						if(x+67 >= tempob.x && x+27 < tempob.x + 100) {
+							if((y+15 < tempob.height - tempob.gap/2) || (y+35 > tempob.height + tempob.gap/2)) {
 								//alert("YOU CRASHED");
 								score = points;
 								clearInterval(loop);
