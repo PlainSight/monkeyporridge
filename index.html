@@ -7,10 +7,19 @@
 		
 	</head>
 	<body>
-
-		<canvas id="canvas" style="width=800; height=600; border: 1px solid red;" ><p> NO HTML5 BADDY </p></canvas>
 		
+<<<<<<< HEAD:index.html
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
+=======
+		<div>
+			<canvas id="canvas" style="float: left; width=800; height=600; border: 1px solid red;" ><p> NO HTML5 BADDY </p></canvas>
+			<div id="scores" style="float: left; padding: 10px;">
+			
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+>>>>>>> origin/gh-pages:index.html
 		
 		<script type="text/javascript">
 			
@@ -34,13 +43,23 @@
 				
 				loadImages();
 				
+				getHighScores();
+				
+				document.getElementById("canvas").onmousedown = function(){
+					return false;
+				};
+				
 				
 				var timer = setInterval(function () {
 					if(imagesReady()) {
 						
 						clearInterval(timer);
 						
+<<<<<<< HEAD:index.html
 						name = window.prompt("Input name","joe blogs");
+=======
+						name = window.prompt("Input name","user");
+>>>>>>> origin/gh-pages:index.html
 						
 						gameLoop(); 
 					}
@@ -53,6 +72,11 @@
 				
 				clearScreen();
 				
+<<<<<<< HEAD:index.html
+=======
+				drawPrompt();
+				
+>>>>>>> origin/gh-pages:index.html
 				postScore();
 								
 				var score = 0;
@@ -90,12 +114,12 @@
 				var loop = setInterval(function() {
 					tick++;
 					
-					if(tick % 100 == 0) {
+					if(tick % 90 == 0) {
 					
 						var obstacle = {
 							x: canvas.width,
 							height: (Math.random()*(canvas.height - 200)) + 100,
-							gap: 100 + ((100 - tick/600) <  0 ? 0 : (100 - tick/600))
+							gap: 100 + ((100 - tick/400) <  0 ? 0 : (100 - tick/400))
 						};
 						
 						obstacles.push(obstacle);
@@ -122,15 +146,15 @@
 					
 					//render
 					clearScreen();
-					
+
+					for(var ob in obstacles) {
+						var pipe = obstacles[ob];
+						drawPipe(pipe);
+					}
 					if(flapdown != 0) {
 						drawImage('birdy', x, y, 1);
 					} else {
 						drawImage('birdy', x, y, 0);
-					}
-					for(var ob in obstacles) {
-						var pipe = obstacles[ob];
-						drawPipe(pipe);
 					}
 					drawScore(points);
 					
@@ -140,7 +164,7 @@
 					
 					if(input == 'click') {
 					
-						dy = -55;
+						dy = -60;
 						flapdown = 8;
 					}
 					//flapdown animation
@@ -152,6 +176,7 @@
 					y += dy/10;
 					dy += 3;
 					
+<<<<<<< HEAD:index.html
 					if(y < 0) {
 						//hit sky
 						//alert("YOU HIT THE SKY");
@@ -159,6 +184,8 @@
 						clearInterval(loop);
 						pause(); ;
 					}
+=======
+>>>>>>> origin/gh-pages:index.html
 					if(y > canvas.height) {
 						//hit ground
 						//alert("CRASH LANDING!");
@@ -171,8 +198,8 @@
 					
 						var tempob = obstacles[ob];
 						
-						if(x+67 >= tempob.x && x < tempob.x + 100) {
-							if((y < tempob.height - tempob.gap/2) || (y+50 > tempob.height + tempob.gap/2)) {
+						if(x+67 >= tempob.x && x+27 < tempob.x + 100) {
+							if((y+15 < tempob.height - tempob.gap/2) || (y+35 > tempob.height + tempob.gap/2)) {
 								//alert("YOU CRASHED");
 								score = points;
 								clearInterval(loop);
@@ -197,12 +224,19 @@
 					success: function(data) {
 						
 						data = JSON.parse(data);
+<<<<<<< HEAD:index.html
 					
 						var ydis = 100;
+=======
+						
+						$("#scores").empty();
+						
+>>>>>>> origin/gh-pages:index.html
 						for(var it = 0; it < data.length; it++) {
 						
 							var score = data[it];
 						
+<<<<<<< HEAD:index.html
 							ctx.fillStyle = "black";
 							ctx.font = "bold 25px Arial";
 							ctx.fillText(score.name + ' ' + score.score, canvas.width/2, ydis);
@@ -212,6 +246,9 @@
 							if(ydis > canvas.height) {
 								break;
 							}
+=======
+							$("#scores").append('<div><span style="width: 240px; display: inline-block;">' + score.name + '</span><span style="width: 120px; display: inline-block;">' + score.score + '</span></div>');
+>>>>>>> origin/gh-pages:index.html
 						}
 					
 					
@@ -222,7 +259,11 @@
 			
 			}
 			
+<<<<<<< HEAD:index.html
 			function drawHighScores() {
+=======
+			function getHighScores() {
+>>>>>>> origin/gh-pages:index.html
 							
 				$.ajax({
 					type: "GET",
@@ -232,6 +273,7 @@
 						
 						data = JSON.parse(data);
 					
+<<<<<<< HEAD:index.html
 						var ydis = 100;
 						for(var it = 0; it < data.length; it++) {
 						
@@ -246,6 +288,16 @@
 							if(ydis > canvas.height) {
 								break;
 							}
+=======
+						$("#scores").empty();
+						
+						for(var it = 0; it < data.length; it++) {
+						
+							var score = data[it];
+													
+							$("#scores").append('<div><span style="width: 240px; display: inline-block;">' + score.name + '</span><span style="width: 120px; display: inline-block;">' + score.score + '</span></div>');
+							
+>>>>>>> origin/gh-pages:index.html
 						}
 					
 					
@@ -314,6 +366,13 @@
 				ctx.fillStyle = "orange";
 				ctx.font = "bold 25px Arial";
 				ctx.fillText(score, canvas.width - 50, 20);
+			}
+			
+			function drawPrompt() {
+			
+				ctx.fillStyle = "red";
+				ctx.font = "bold 50px Arial";
+				ctx.fillText("Click to play again", canvas.width/5, canvas.height/2 - 50);
 			}
 			
 			function drawPipe(pipe) {
