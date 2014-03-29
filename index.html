@@ -24,6 +24,7 @@
 			var eventQueue = [];
 			var name = "";
 			var score = 0;
+			var outertick = 0;
 			
 			window.onload = function (e) {
 								
@@ -111,7 +112,7 @@
 						obstacles.push(obstacle);
 					}
 					
-					if(tick > 300 && (tick - 30) % 100 == 0) {
+					if(tick > 300 && (tick - 30) % 90 == 0) {
 						points++;
 					}
 					
@@ -166,6 +167,7 @@
 						//hit ground
 						//alert("CRASH LANDING!");
 						score = points;
+						outertick = tick;
 						clearInterval(loop);
 						pause(); ;
 					}
@@ -178,6 +180,7 @@
 							if((y+15 < tempob.height - tempob.gap/2) || (y+35 > tempob.height + tempob.gap/2)) {
 								//alert("YOU CRASHED");
 								score = points;
+								outertick = tick;
 								clearInterval(loop);
 								pause(); ;
 							}
@@ -188,15 +191,31 @@
 			
 			}
 			
+			String.prototype.hashCode = function(){
+				if (Array.prototype.reduce){
+					return this.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
+				} 
+				var hash = 0;
+				if (this.length === 0) return hash;
+				for (var i = 0; i < this.length; i++) {
+					var character  = this.charCodeAt(i);
+					hash  = ((hash<<5)-hash)+character;
+					hash = hash & hash; // Convert to 32bit integer
+				}
+				return hash;
+			}
+			
 			function postScore() {
 			
 				console.log(name + ' ' + score);
-			
+				
+				var hash = new String(name + score + outertick).hashCode();
+				
 				$.ajax({
 					type: "POST",
 					url: "http://plainsight.co.nz:8888/addscore", 
 					async: true,
-					data: { name: name, score: score },
+					data: { name: name, score: score, tick: outertick, hash: hash },
 					success: function(data) {
 						
 						data = JSON.parse(data);
