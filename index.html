@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 	<head>
 			
@@ -7,19 +6,15 @@
 		
 	</head>
 	<body>
-		
-<<<<<<< HEAD:index.html
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
-=======
 		<div>
-			<canvas id="canvas" style="float: left; width=800; height=600; border: 1px solid red;" ><p> NO HTML5 BADDY </p></canvas>
+			<canvas id="canvas" style="float: left; width:800px; height:600px; border: 1px solid red;" ><p> NO HTML5
+                BADDY </p></canvas>
 			<div id="scores" style="float: left; padding: 10px;">
 			
 			</div>
 		</div>
 		
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
->>>>>>> origin/gh-pages:index.html
 		
 		<script type="text/javascript">
 			
@@ -54,12 +49,8 @@
 					if(imagesReady()) {
 						
 						clearInterval(timer);
-						
-<<<<<<< HEAD:index.html
-						name = window.prompt("Input name","joe blogs");
-=======
+
 						name = window.prompt("Input name","user");
->>>>>>> origin/gh-pages:index.html
 						
 						gameLoop(); 
 					}
@@ -71,12 +62,7 @@
 			function pause() {
 				
 				clearScreen();
-				
-<<<<<<< HEAD:index.html
-=======
 				drawPrompt();
-				
->>>>>>> origin/gh-pages:index.html
 				postScore();
 								
 				var score = 0;
@@ -175,17 +161,7 @@
 					//physics
 					y += dy/10;
 					dy += 3;
-					
-<<<<<<< HEAD:index.html
-					if(y < 0) {
-						//hit sky
-						//alert("YOU HIT THE SKY");
-						score = points;
-						clearInterval(loop);
-						pause(); ;
-					}
-=======
->>>>>>> origin/gh-pages:index.html
+
 					if(y > canvas.height) {
 						//hit ground
 						//alert("CRASH LANDING!");
@@ -224,31 +200,13 @@
 					success: function(data) {
 						
 						data = JSON.parse(data);
-<<<<<<< HEAD:index.html
-					
-						var ydis = 100;
-=======
 						
 						$("#scores").empty();
-						
->>>>>>> origin/gh-pages:index.html
+
 						for(var it = 0; it < data.length; it++) {
 						
 							var score = data[it];
-						
-<<<<<<< HEAD:index.html
-							ctx.fillStyle = "black";
-							ctx.font = "bold 25px Arial";
-							ctx.fillText(score.name + ' ' + score.score, canvas.width/2, ydis);
-							
-							ydis += 30;
-							
-							if(ydis > canvas.height) {
-								break;
-							}
-=======
 							$("#scores").append('<div><span style="width: 240px; display: inline-block;">' + score.name + '</span><span style="width: 120px; display: inline-block;">' + score.score + '</span></div>');
->>>>>>> origin/gh-pages:index.html
 						}
 					
 					
@@ -258,12 +216,8 @@
 			
 			
 			}
-			
-<<<<<<< HEAD:index.html
-			function drawHighScores() {
-=======
+
 			function getHighScores() {
->>>>>>> origin/gh-pages:index.html
 							
 				$.ajax({
 					type: "GET",
@@ -272,23 +226,6 @@
 					success: function(data) {
 						
 						data = JSON.parse(data);
-					
-<<<<<<< HEAD:index.html
-						var ydis = 100;
-						for(var it = 0; it < data.length; it++) {
-						
-							var score = data[it];
-						
-							ctx.fillStyle = "black";
-							ctx.font = "bold 25px Arial";
-							ctx.fillText(score.name + ' ' + score.score, canvas.width/2, ydis);
-							
-							ydis += 30;
-							
-							if(ydis > canvas.height) {
-								break;
-							}
-=======
 						$("#scores").empty();
 						
 						for(var it = 0; it < data.length; it++) {
@@ -296,8 +233,7 @@
 							var score = data[it];
 													
 							$("#scores").append('<div><span style="width: 240px; display: inline-block;">' + score.name + '</span><span style="width: 120px; display: inline-block;">' + score.score + '</span></div>');
-							
->>>>>>> origin/gh-pages:index.html
+
 						}
 					
 					
