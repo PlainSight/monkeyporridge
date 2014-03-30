@@ -2,17 +2,28 @@ var http = require("http");
 var url = require("url");
 var mysql = require("mysql");
 var qs = require("querystring");
+var fs = require("fs");
 
 var connection = mysql.createConnection({
 	user: "root",
 	password: "redacted",
 	database: "redacted",
 	host: "127.0.0.1",
-	port: "3306",
-	socketPath: "/var/run/mysqld/mysqld.sock"
+	port: "3306"
 });
 
-function start(route) {
+var indexhtml = "";
+
+fs.readFile("./index.html", function(err, html) {
+
+	if(err) {
+		throw err;
+	}
+	
+	indexhtml = html;
+});
+
+function start() {
 
 	function onRequest(request, response) {		
 
@@ -30,7 +41,7 @@ function start(route) {
 				
 				postdata.name = postdata.name.replace("'", "''");
 
-				if((postdata.score > 2000) && (typeof postdata.score !== 'number') && postdata.hash !== confirmationhash) {
+				if((postdata.score > 2000) && (typeof postdata.score !== 'number') && postdata.hash !== confirmationhash){
 					replyWithScore(response);	
 				} else {
 
@@ -45,15 +56,50 @@ function start(route) {
 			
 			return;
 		}
-
-		replyWithScore(response);			
-
+		
+		if(pathname == '/index') {
+		
+			replyWithPage(response);
+		
+			return;
+		}
+		
+		if(pathname == '/getscores') {
+		
+			replyWithScore(response);
+			
+			return;
+		}
+		
+		getOtherFile(pathname, response);
 		
 	}
 	
 	http.createServer(onRequest).listen(8888);
 
 	console.log('server started');
+}
+
+function getOtherFile(pathname, response) {
+
+	fs.readFile('.' + pathname, function(err, file) {
+
+		if(err) {
+			replyWithPage(response);
+			return;
+		}
+		
+		response.writeHeader(200, {"Content-Type": "iamge/png"});  
+		response.end(file, 'binary');  
+	});
+} 
+
+function replyWithPage(response) {
+	
+	response.writeHeader(200, {"Content-Type": "text/html"});  
+	response.write(indexhtml);  
+	response.end();
+
 }
 
 function replyWithScore(response) {
@@ -86,9 +132,4 @@ String.prototype.hashCode = function(){
 	return hash;
 }
 
-function route(pathname) {
-
-}
-
-
-start(route);
+start();
