@@ -88,8 +88,26 @@ function getOtherFile(pathname, response) {
 			replyWithPage(response);
 			return;
 		}
+
+		var contentType = '';
 		
-		response.writeHeader(200, {"Content-Type": "iamge/png"});  
+		if( pathname.search('png') > -1 ) {
+			contentType = 'image/png';
+		}
+		else if ( pathname.search('css') > -1 ) {
+			contentType = 'text/css';
+		}
+		else if ( pathname.search('js') > -1 ) {
+			contentType = 'text/javascript';
+		}
+		else {
+			contentType = 'text/plain';
+		}
+
+		// console.log( contentType );
+		
+		response.writeHeader(200, {"Content-Type": contentType });  
+		
 		response.end(file, 'binary');  
 	});
 } 

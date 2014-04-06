@@ -1,0 +1,25 @@
+/* theme.css */
+
+.row {
+	max-width: 69rem;
+}
+
+#masthead {
+	margin-bottom: 2rem;
+}
+
+.flex-video {
+	border: 1px solid #b00;
+	padding-top: 0;
+}
+
+#canvas {
+	width: 800px;
+	height: 600px;
+	border: 1px solid #b00;
+}
+
+
+#scores {
+	padding: 10px;
+}
